@@ -22,10 +22,16 @@ class Config:
             self.prefix = data.get('prefix')
         else:
             self.prefix = '!'
+        if 'google api key' in data.keys():
+            self.g_token = data.get('google api key')
+        else:
+            self.g_token = ""
     def get_prefix(self):
         return self.prefix
     def add_command(self,command):
         self.commands.append(command)
+    def get_gkey(self):
+        return self.g_token
     def check_command(self,command):
         if self.all_commands or command in self.commands:
             return True
