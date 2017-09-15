@@ -14,9 +14,12 @@ class Commands(BaseCommands):
 
     def __init__(self,g_token):
         self.import_tells()
+        self.import_grabs()
         self.gkey = g_token
         if command == "tell":
             return self.do_tell(sender,args)
+        elif command == "grabr":
+            return self.get_grab(args)
         else:
             return self.get_unsupported_msg(command)
     def do_tell(self,sender,args):
@@ -40,6 +43,24 @@ class Commands(BaseCommands):
         BaseCommands.export_json("../data/tells.json",self.tells)
     def import_tells(self):
         self.tells = BaseCommands.read_json("../data/tells.json")
+    def add_grab(self,grab):
+        grab_source =  "<@"+grab.author.id +">"
+        if grab_source not in self.grabs.keys():
+            self.grabs[grab_source] = []
+        self.grabs[grab_source].append(grab.content)
+        self.export_grabs()
+    def import_grabs(self):
+        self.grabs = BaseCommands.read_json("../data/grabs.json")
+    def export_grabs(self):
+        BaseCommands.export_json("../data/grabs.json",self.grabs)
+    def get_grab(self,author):
+        if author == "":
+            graba= random.choice(list(self.grabs.keys()))
+            grab = random.choice(self.grabs[graba])
+            return graba+": "+grab
+        else:
+            grabs = self.grabs[author]
+            return author+": "+random.choice(self.grabs[author])
         try:
         except:
     def get_youtube(self,search):

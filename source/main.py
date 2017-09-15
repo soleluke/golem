@@ -32,6 +32,11 @@ async def on_message(message):
                 tmp = await client.send_message(message.channel,tell)
             if message.content.startswith(config.get_prefix()):
                 command = get_command(message.content)
+                if command == "grab":
+                    async for log in client.logs_from(message.channel,limit=2):
+                        if not log.content.startswith("!grab"):
+                            commands.add_grab(log)
+                            tmp = await client.send_message(message.channel,"Grab Successful")
                 else:
                     try:
                         args = message.content.split(' ',1)[1]
