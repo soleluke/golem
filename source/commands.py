@@ -24,6 +24,8 @@ class Commands(BaseCommands):
         sender = "<@"+message.author.id + ">"
         if command == "tell":
             return self.do_tell(sender,args)
+        elif command == "ask":
+            return self.ask(args)
         elif command == "updoot":
             if args.split(' ',1)[0] != sender:
                 return self.doot(args.split(' ',1)[0],1)
@@ -101,8 +103,14 @@ class Commands(BaseCommands):
         else:
             grabs = self.grabs[author]
             return author+": "+random.choice(self.grabs[author])
+    def ask(self,args):
         try:
+            options = args.split(" or ",20)
         except:
+            options = ['yes','no']
+        if len(options) == 1:
+            options = ['yes','no']
+        return random.choice(options)
     def import_places(self):
         self.places = BaseCommands.read_json("../data/places.json")
     def export_places(self):
