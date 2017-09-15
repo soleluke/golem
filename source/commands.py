@@ -9,17 +9,33 @@ import os
 import random
 import pprint
 from weather import Weather
+
 YT_SERVICE_NAME = "youtube"
 YT_API_VERSION = "v3"
 class Commands(BaseCommands):
 
     def __init__(self,g_token):
         self.import_tells()
+        self.import_doots()
         self.import_grabs()
         self.import_places()
         self.gkey = g_token
+    def get_response(self,message,command,args):
+        sender = "<@"+message.author.id + ">"
         if command == "tell":
             return self.do_tell(sender,args)
+        elif command == "updoot":
+            if args.split(' ',1)[0] != sender:
+                return self.doot(args.split(' ',1)[0],1)
+            else:
+                return "No"
+        elif command == "downdoot":
+            if args.split(" ",1)[0] != sender:
+                return self.doot(args.split(' ',1)[0],-1)
+            else:
+                return "No"
+        elif command == "doots":
+            return self.doot(args,0)
         elif command == "grabr":
             return self.get_grab(args)
         elif command == "addplace":
@@ -55,6 +71,18 @@ class Commands(BaseCommands):
         BaseCommands.export_json("../data/tells.json",self.tells)
     def import_tells(self):
         self.tells = BaseCommands.read_json("../data/tells.json")
+    def doot(self,person,change):
+        if person in self.doots.keys():
+            self.doots[person]+=change
+            self.export_doots()
+        else:
+            self.doots[person]=change
+            self.export_doots()
+        return (person + " has " + str(self.doots[person])+ " doots")
+    def export_doots(self):
+        BaseCommands.export_json("../data/doots.json",self.doots)
+    def import_doots(self):
+        self.doots = BaseCommands.read_json("../data/doots.json")
     def add_grab(self,grab):
         grab_source =  "<@"+grab.author.id +">"
         if grab_source not in self.grabs.keys():
