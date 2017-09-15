@@ -1,19 +1,19 @@
-import discord
-import pprint
 from apiclient.discovery import build
 from apiclient.errors import HttpError
+from base_commands import BaseCommands
+import contextlib
 import datetime
+import discord
 import json
 import os
-class Commands:
+import random
+import pprint
 YT_SERVICE_NAME = "youtube"
 YT_API_VERSION = "v3"
+class Commands(BaseCommands):
 
-    def __init__(self):
+    def __init__(self,g_token):
         self.import_tells()
-    def get_unsupported_msg(self,command):
-        return command+" is currently unsupported."
-    def get_response(self,sender,command,args):
         self.gkey = g_token
         if command == "tell":
             return self.do_tell(sender,args)
@@ -37,21 +37,11 @@ YT_API_VERSION = "v3"
         else:
             return list()
     def export_tells(self):
-        os.remove("../data/tells.json")
-        with open("../data/tells.json","w+") as f:
-            json.dump(self.tells,f)
+        BaseCommands.export_json("../data/tells.json",self.tells)
     def import_tells(self):
+        self.tells = BaseCommands.read_json("../data/tells.json")
         try:
-            with open("../data/tells.json","r") as f:
-                try:
-                    self.tells = json_load(f)
-                except:
-                    
-                    self.tells = {}
         except:
-            self.tells = {}
-        pprint.pprint(self.tells)
-
     def get_youtube(self,search):
         try:
             youtube = build(YT_SERVICE_NAME,YT_API_VERSION,developerKey=self.gkey)
