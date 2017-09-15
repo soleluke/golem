@@ -1,6 +1,6 @@
 #Golem - a simple discord utility bot
-##Setup
-##Configuration
+## Setup
+## Configuration
 All configuration is done in config/config.json. Contents should be as follows
 ```
 {
@@ -14,7 +14,7 @@ All configuration is done in config/config.json. Contents should be as follows
 
 }
 ```
-##Triggers
+## Triggers
 Triggers are stored in config/triggers.json with the following format:
 ```
 {
