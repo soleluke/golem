@@ -25,6 +25,7 @@ async def on_ready():
 async def on_message(message):
     if message.author != client.user:
         tmp = await check_triggers(message)
+        if message.channel.is_private == False or message.content.startswith("!help") or message.content.startswith("!list") :
 
 async def check_triggers(message):
     for response in triggers.get_response(message):
