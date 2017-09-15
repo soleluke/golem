@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
-import discord
 import asyncio
 import config
 import commands
+import discord
 import pprint
 import triggers
 
 config = config.Config()
 client = discord.Client()
-commands = commands.Commands()
+commands = commands.Commands(config.get_gkey())
 triggers = triggers.Triggers()
 def get_command(message):
     command = message.split(" ",1)[0]
