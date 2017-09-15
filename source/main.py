@@ -37,6 +37,9 @@ async def on_message(message):
                         if not log.content.startswith("!grab"):
                             commands.add_grab(log)
                             tmp = await client.send_message(message.channel,"Grab Successful")
+                elif command == "list" and config.check_command(command):
+                    tmp = await client.send_message(message.author,commands.list_places())
+                    tmp2 = await client.send_message(message.channel,"I have PM'd you the list of places")
                 else:
                     try:
                         args = message.content.split(' ',1)[1]

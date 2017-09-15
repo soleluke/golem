@@ -15,11 +15,18 @@ class Commands(BaseCommands):
     def __init__(self,g_token):
         self.import_tells()
         self.import_grabs()
+        self.import_places()
         self.gkey = g_token
         if command == "tell":
             return self.do_tell(sender,args)
         elif command == "grabr":
             return self.get_grab(args)
+        elif command == "addplace":
+            return self.add_place(args)
+        elif command == "suggest":
+            return self.suggest_place()
+        elif command == "list":
+            return self.list_places()
         else:
             return self.get_unsupported_msg(command)
     def do_tell(self,sender,args):
@@ -63,6 +70,24 @@ class Commands(BaseCommands):
             return author+": "+random.choice(self.grabs[author])
         try:
         except:
+    def import_places(self):
+        self.places = BaseCommands.read_json("../data/places.json")
+    def export_places(self):
+        BaseCommands.export_json("../data/places.json",self.places)
+    def add_place(self,place):
+        if place not in self.places:
+            self.places.append(place)
+            self.export_places()
+            return "Added " + place
+        else:
+            return place + " is already on the list"
+    def suggest_place(self):
+        return random.choice(self.places)
+    def list_places(self):
+        ret = ""
+        for place in self.places:
+            ret+=place+"\n"
+        return ret
     def get_youtube(self,search):
         try:
             youtube = build(YT_SERVICE_NAME,YT_API_VERSION,developerKey=self.gkey)
