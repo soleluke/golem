@@ -4,10 +4,12 @@ import asyncio
 import config
 import commands
 import pprint
+import triggers
 
 config = config.Config()
 client = discord.Client()
 commands = commands.Commands()
+triggers = triggers.Triggers()
 def get_command(message):
     command = message.split(" ",1)[0]
     return command[1:]
@@ -32,5 +34,10 @@ async def on_message(message):
             tmp = await client.send_message(message.channel,commands.get_response(sender,command,args))
         else:
             tmp = await client.send_message(message.channel,commands.get_unsupported_msg(command))
+        tmp = await check_triggers(message)
 
+async def check_triggers(message):
+    for response in triggers.get_response(message):
+        tmp = await client.send_message(message.channel,response) 
+    return
 client.run(config.get_token())
