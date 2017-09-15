@@ -50,6 +50,8 @@ class Commands(BaseCommands):
             return self.get_weather(args)
         elif command == "forecast":
             return self.get_forecast(args)
+        elif command == "help":
+            return self.get_help(args)
         else:
             return self.get_unsupported_msg(command)
     def do_tell(self,sender,args):
@@ -148,3 +150,30 @@ class Commands(BaseCommands):
         location = weather.lookup_by_location(search)
         forecast = location.forecast()[0]
         return "Forecast: " + forecast["text"] +", " + forecast["high"] +"H "+ forecast["low"] + "L"
+    def get_help(self,command):
+        if command == "tell":
+            return "usage: tell <person> <message>"
+        elif command == "ask":
+            return "usage:\nask <question> - returns yes or no\nask <option1> or <option2> or ... or <optionN> - returns a random option"
+        elif command == "updoot":
+            return "usage: updoot <person>"
+        elif command == "downdoot":
+            return "usage: downdoot <person>"
+        elif command == "doots":
+            return "usage: doot <person> - returns net doots of <person>"
+        elif command == "grabr":
+            return "usage:\ngrabr - returns random grab\ngrabr <person> - returns random grab said by <person>"
+        elif command == "addplace":
+            return "usage: addplace <place>"
+        elif command == "suggest":
+            return "usage: suggest - returns a random place"
+        elif command == "list":
+            return "usage: list - PM's the list of places"
+        elif command == "weather":
+            return "usage: weather - returns current weather for <location>"
+        elif command == "forecast":
+            return "usage: forecast <location> - returns today's forecast for <location>"
+        elif command == "":
+            return "usage: help <command> - returns usage of command"
+        else:
+            return command + " is not currently supported"
