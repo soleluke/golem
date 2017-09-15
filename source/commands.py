@@ -8,6 +8,7 @@ import json
 import os
 import random
 import pprint
+from weather import Weather
 YT_SERVICE_NAME = "youtube"
 YT_API_VERSION = "v3"
 class Commands(BaseCommands):
@@ -27,6 +28,10 @@ class Commands(BaseCommands):
             return self.suggest_place()
         elif command == "list":
             return self.list_places()
+        elif command == "weather":
+            return self.get_weather(args)
+        elif command == "forecast":
+            return self.get_forecast(args)
         else:
             return self.get_unsupported_msg(command)
     def do_tell(self,sender,args):
@@ -97,3 +102,13 @@ class Commands(BaseCommands):
             return "https://www.youtube.com/watch?v=" + vid
         except HttpError as e:
              print( "An HTTP error %d occurred:\n%s",e.resp.status, e.content)
+    def get_weather(self,search):
+        weather = Weather()
+        location = weather.lookup_by_location(search)
+        condition = location.condition()
+        return "Current Weather: " + condition["temp"] + " degrees and " + condition["text"]
+    def get_forecast(self,search):
+        weather = Weather()
+        location = weather.lookup_by_location(search)
+        forecast = location.forecast()[0]
+        return "Forecast: " + forecast["text"] +", " + forecast["high"] +"H "+ forecast["low"] + "L"
