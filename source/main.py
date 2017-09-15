@@ -26,6 +26,21 @@ async def on_message(message):
     if message.author != client.user:
         tmp = await check_triggers(message)
         if message.channel.is_private == False or message.content.startswith("!help") or message.content.startswith("!list") :
+            sender ="<@"+ message.author.id+">"
+            tells = commands.get_tells(sender)
+            for tell in tells:
+                tmp = await client.send_message(message.channel,tell)
+            if message.content.startswith(config.get_prefix()):
+                command = get_command(message.content)
+                else:
+                    try:
+                        args = message.content.split(' ',1)[1]
+                    except:
+                        args = ""
+                    if config.check_command(command):
+                        tmp = await client.send_message(message.channel,commands.get_response(message,command,args))
+                    else:
+                        tmp = await client.send_message(message.channel,commands.get_unsupported_msg(command))
 
 async def check_triggers(message):
     for response in triggers.get_response(message):
