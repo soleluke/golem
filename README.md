@@ -1,5 +1,9 @@
 #Golem - a simple discord utility bot
 ## Setup
+Golem uses the following pip3 packages:
+	python3-weather-api
+	google-api-python-client
+	discord
 ## Configuration
 All configuration is done in config/config.json. Contents should be as follows
 ```
