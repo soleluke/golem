@@ -22,6 +22,7 @@ class Commands(BaseCommands):
         self.gkey = g_token
     def get_response(self,message,command,args):
         sender = "<@"+message.author.id + ">"
+        args=args.replace("!","")
         if command == "tell":
             return self.do_tell(sender,args)
         elif command == "ask":
