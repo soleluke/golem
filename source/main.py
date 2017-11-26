@@ -27,6 +27,7 @@ async def on_message(message):
     if message.author != client.user:
         tmp = await check_triggers(message)
         if message.channel.is_private == False or message.content.startswith("!help") or message.content.startswith("!list") :
+        if message.channel.is_private == False or message.content.startswith(config.get_prefix()+"help") or message.content.startswith(config.get_prefix()+"list") or message.content.startswith(config.get_prefix()+"commands"):
             sender ="<@"+ message.author.id+">"
             tells = commands.get_tells(sender)
             for tell in tells:
@@ -43,6 +44,9 @@ async def on_message(message):
                 elif command == "list" and config.check_command(command):
                     tmp = await client.send_message(message.author,commands.list_places())
                     tmp2 = await client.send_message(message.channel,"I have PM'd you the list of places")
+                elif command == "commands" and config.check_command(command):
+                    tmp = await client.send_message(message.author,commands.list_commands())
+                    tmp2 = await client.send_message(message.channel,"I have PM'd you the list of commands")
                 else:
                     try:
                         args = message.content.split(' ',1)[1]

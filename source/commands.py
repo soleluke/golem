@@ -151,30 +151,15 @@ class Commands(BaseCommands):
         location = weather.lookup_by_location(search)
         forecast = location.forecast()[0]
         return "Forecast: " + forecast["text"] +", " + forecast["high"] +"H "+ forecast["low"] + "L"
+    def list_commands(self):
+        commands = BaseCommands.read_json("../config/commands.json")
+        ret_com = [x +" usage: "+ commands[x] for x in commands.keys()]
+        return "\n".join(ret_com)
     def get_help(self,command):
-        if command == "tell":
-            return "usage: tell <person> <message>"
-        elif command == "ask":
-            return "usage:\nask <question> - returns yes or no\nask <option1> or <option2> or ... or <optionN> - returns a random option"
-        elif command == "updoot":
-            return "usage: updoot <person>"
-        elif command == "downdoot":
-            return "usage: downdoot <person>"
-        elif command == "doots":
-            return "usage: doot <person> - returns net doots of <person>"
-        elif command == "grabr":
-            return "usage:\ngrabr - returns random grab\ngrabr <person> - returns random grab said by <person>"
-        elif command == "addplace":
-            return "usage: addplace <place>"
-        elif command == "suggest":
-            return "usage: suggest - returns a random place"
-        elif command == "list":
-            return "usage: list - PM's the list of places"
-        elif command == "weather":
-            return "usage: weather - returns current weather for <location>"
-        elif command == "forecast":
-            return "usage: forecast <location> - returns today's forecast for <location>"
-        elif command == "":
-            return "usage: help <command> - returns usage of command"
-        else:
+        if command == "":
+            return "usage: help <command> - returns help for <command>. use the 'commands' command to get a list of commands"
+        try:
+            commands = BaseCommands.read_json("../config/commands.json")
+            return "usage: "+ commands[command]
+        except:
             return command + " is not currently supported"
