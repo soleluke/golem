@@ -165,7 +165,7 @@ class Commands(BaseCommands):
         weather = Weather()
         location = weather.lookup_by_location(search)
         condition = location.condition()
-        return "Current Weather: " + condition["temp"] + " degrees and " + condition["text"]
+        return location.title()+": " + condition["temp"] + " degrees and " + condition["text"]
     def get_forecast(self,search):
         weather = Weather()
         location = weather.lookup_by_location(search)
