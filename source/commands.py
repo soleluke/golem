@@ -43,6 +43,8 @@ class Commands(BaseCommands):
             return self.doot(args,0)
         elif command == "grabr":
             return self.get_grab(args)
+        elif command == "rgrab":
+            return self.get_grab_topic(args)
         elif command == "addplace":
             return self.add_place(args)
         elif command == "suggest":
@@ -53,6 +55,9 @@ class Commands(BaseCommands):
             return self.get_weather(args)
         elif command == "forecast":
             return self.get_forecast(args)
+        elif command == "igrab":
+            self.import_grabs()
+            return "Refreshed Grabs from File"
         elif command =="bang":
             return self.bang(args)
         elif command =="backlog":
@@ -108,6 +113,11 @@ class Commands(BaseCommands):
         self.grabs = BaseCommands.read_json("../data/grabs.json")
     def export_grabs(self):
         BaseCommands.export_json("../data/grabs.json",self.grabs)
+    def get_grab_topic(self,thing):
+        grabs= [ [{item:x} for x in self.grabs[item] if thing in x ] for item in self.grabs.keys()]
+        grabs = [item for sublist in grabs for item in sublist]
+        (graba,grab), = random.choice(grabs).items()
+        return graba+": "+grab
     def get_grab(self,author):
         if author == "":
             graba= random.choice(list(self.grabs.keys()))
