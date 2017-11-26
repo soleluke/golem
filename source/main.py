@@ -5,6 +5,7 @@ import commands
 import discord
 import pprint
 import triggers
+import re
 
 config = config.Config()
 client = discord.Client()
@@ -31,10 +32,12 @@ async def on_message(message):
             for tell in tells:
                 tmp = await client.send_message(message.channel,tell)
             if message.content.startswith(config.get_prefix()):
+            if (re.search("^"+config.get_prefix()+"\w+",message.content)):
                 command = get_command(message.content)
                 if command == "grab":
                     async for log in client.logs_from(message.channel,limit=2):
                         if not log.content.startswith("!grab"):
+                        if not re.search(config.get_prefix()+"grab",log.content):
                             commands.add_grab(log)
                             tmp = await client.send_message(message.channel,"Grab Successful")
                 elif command == "list" and config.check_command(command):
