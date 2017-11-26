@@ -20,6 +20,7 @@ class Commands(BaseCommands):
         self.import_grabs()
         self.import_places()
         self.backlog = BaseCommands.read_json("../data/backlog.json")
+        self.work_tells = BaseCommands.read_json("../data/wtells.json")
         self.gkey = g_token
     def get_response(self,message,command,args):
         sender = "<@"+message.author.id + ">"
@@ -54,6 +55,10 @@ class Commands(BaseCommands):
             return self.get_forecast(args)
         elif command =="backlog":
             return self.add_to_backlog(args)
+        elif command=="wtell":
+            return self.work_tell(sender,args)
+        elif command=="home":
+            return self.check_work_tells(sender)
         elif command == "help":
             return self.get_help(args)
         else:
@@ -164,6 +169,25 @@ class Commands(BaseCommands):
         commands = BaseCommands.read_json("../config/commands.json")
         ret_com = [x +" usage: "+ commands[x] for x in commands.keys()]
         return "\n".join(ret_com)
+    def work_tell(self,sender,args):
+        target = args.split(' ',1)[0]
+        msg = args.split(' ',1)[1]
+        if self.work_tells == None:
+            self.work_tells = {}
+        if target not in self.work_tells.keys():
+            self.work_tells[target] = []
+        self.work_tells[target].append(sender+" said "+msg)
+        BaseCommands.export_json("../data/wtells.json",self.work_tells)
+        return "Work tell added"
+    def check_work_tells(self,sender):
+        ret = "Work tells:"
+        if sender not in self.work_tells.keys():
+            return "No Work tells for this user"
+        for tell in self.work_tells[sender]:
+            ret+="\n"+tell
+        del self.work_tells[sender]
+        BaseCommands.export_json("../data/wtells.json",self.work_tells)
+        return ret
     def get_help(self,command):
         if command == "":
             return "usage: help <command> - returns help for <command>. use the 'commands' command to get a list of commands"
