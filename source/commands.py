@@ -19,6 +19,7 @@ class Commands(BaseCommands):
         self.import_doots()
         self.import_grabs()
         self.import_places()
+        self.backlog = BaseCommands.read_json("../data/backlog.json")
         self.gkey = g_token
     def get_response(self,message,command,args):
         sender = "<@"+message.author.id + ">"
@@ -51,6 +52,8 @@ class Commands(BaseCommands):
             return self.get_weather(args)
         elif command == "forecast":
             return self.get_forecast(args)
+        elif command =="backlog":
+            return self.add_to_backlog(args)
         elif command == "help":
             return self.get_help(args)
         else:
@@ -151,6 +154,12 @@ class Commands(BaseCommands):
         location = weather.lookup_by_location(search)
         forecast = location.forecast()[0]
         return "Forecast: " + forecast["text"] +", " + forecast["high"] +"H "+ forecast["low"] + "L"
+    def add_to_backlog(self,item):
+        if self.backlog == None:
+            self.backlog = []
+        self.backlog.append(item)
+        BaseCommands.export_json("../data/backlog.json",self.backlog)
+        return "Added to backlog"
     def list_commands(self):
         commands = BaseCommands.read_json("../config/commands.json")
         ret_com = [x +" usage: "+ commands[x] for x in commands.keys()]
