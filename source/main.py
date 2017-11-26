@@ -26,18 +26,15 @@ async def on_ready():
 async def on_message(message):
     if message.author != client.user:
         tmp = await check_triggers(message)
-        if message.channel.is_private == False or message.content.startswith("!help") or message.content.startswith("!list") :
         if message.channel.is_private == False or message.content.startswith(config.get_prefix()+"help") or message.content.startswith(config.get_prefix()+"list") or message.content.startswith(config.get_prefix()+"commands"):
             sender ="<@"+ message.author.id+">"
             tells = commands.get_tells(sender)
             for tell in tells:
                 tmp = await client.send_message(message.channel,tell)
-            if message.content.startswith(config.get_prefix()):
             if (re.search("^"+config.get_prefix()+"\w+",message.content)):
                 command = get_command(message.content)
                 if command == "grab":
                     async for log in client.logs_from(message.channel,limit=2):
-                        if not log.content.startswith("!grab"):
                         if not re.search(config.get_prefix()+"grab",log.content):
                             commands.add_grab(log)
                             tmp = await client.send_message(message.channel,"Grab Successful")
