@@ -53,6 +53,8 @@ class Commands(BaseCommands):
             return self.get_weather(args)
         elif command == "forecast":
             return self.get_forecast(args)
+        elif command =="bang":
+            return self.bang(args)
         elif command =="backlog":
             return self.add_to_backlog(args)
         elif command=="wtell":
@@ -159,6 +161,10 @@ class Commands(BaseCommands):
         location = weather.lookup_by_location(search)
         forecast = location.forecast()[0]
         return "Forecast: " + forecast["text"] +", " + forecast["high"] +"H "+ forecast["low"] + "L"
+    def bang(self,target):
+        bangs = BaseCommands.read_json("../data/bangs.json")
+        bang = random.choice(bangs)
+        return target + bang
     def add_to_backlog(self,item):
         if self.backlog == None:
             self.backlog = []
