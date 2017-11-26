@@ -1,0 +1,22 @@
+{
+			"tell"		:"tell <person> <message>",
+            "ask"		:"\nask <question> - returns yes or no\nask <option1> or <option2> or ... or <optionN> - returns a random option",
+            "updoot"	:"updoot <person> - adds one doot to <person>",
+            "downdoot"	:"downdoot <person> - removes one doot from <person>",
+            "doots"		:"doot <person> - returns net doots of <person>",
+            "rgrab"		:"rgrab <search-term> - returns random grab containing <search-term>",
+            "grabr"		:"\ngrabr - returns random grab\ngrabr <person> - returns random grab said by <person>",
+			"grab"		:"grab - adds the last message sent to the grabs list",
+            "addplace"	:"addplace <place>",
+            "suggest"	:"suggest - returns a random place",
+            "list"		:"list - PM's the list of places",
+            "weather"	: "weather <location> - returns current weather for <location>",
+            "forecast"	:"forecast <location> - returns today's forecast for <location>",
+			"bang"		:"bang <person> - bangs <person>",
+			"math"		:"math <expression> - evaluates <expression>",
+			"backlog"	:"backlog <item> - adds item to backlog",
+			"wtell"		:"wtell <message> - adds <message> to your work tells - see the home command",
+			"home"		:"home - returns all work_tells",
+			"commands"	:"commands - PM's the user a list of commands",
+            "help"		:"help <command> - returns usage of command"
+}
