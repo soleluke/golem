@@ -1,9 +1,10 @@
-#Golem - a simple discord utility bot
+# Golem - a simple discord utility bot
 ## Setup
 Golem uses the following pip3 packages:
 	python3-weather-api
 	google-api-python-client
 	discord
+	fuzzywuzzy
 ## Configuration
 All configuration is done in config/config.json. Contents should be as follows
 ```
@@ -25,5 +26,5 @@ Triggers are stored in config/triggers.json with the following format:
 	"trigger":"response"
 }
 ```
-Triggers are loaded at runtime and the bot must be restarted to load any changes
+Triggers are loaded at runtime and the bot must be restarted for any changes to take effect
 
