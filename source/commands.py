@@ -211,4 +211,15 @@ class Commands(BaseCommands):
             commands = BaseCommands.read_json("../config/commands.json")
             return "usage: "+ commands[command]
         except:
-            return command + " is not currently supported"
+            return command + " is not currently supported\n"+self.fuzzy_command(command)
+    def fuzzy_command(self,inp):
+        commands = BaseCommands.read_json("../config/commands.json")
+        comms = commands.keys()
+        best = 0
+        ret = ""
+        for comm in comms:
+            ratio = fuzz.ratio(inp,comm)
+            if ratio>best :
+                best = ratio
+                ret = comm
+        return "Closest Command:\n"+commands[ret]

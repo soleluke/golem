@@ -8,6 +8,7 @@ import triggers
 import re
 
 config = config.Config()
+print("Loaded config\n")
 client = discord.Client()
 commands = commands.Commands(config.get_gkey())
 triggers = triggers.Triggers()
@@ -58,4 +59,5 @@ async def check_triggers(message):
     for response in triggers.get_response(message):
         tmp = await client.send_message(message.channel,response) 
     return
+print(config.get_token())
 client.run(config.get_token())
