@@ -2,5 +2,4 @@ source/__pycache__/*
 data/*
 config/config.json
 config/triggers.json
-
 todo
