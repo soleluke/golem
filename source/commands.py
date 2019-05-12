@@ -9,6 +9,7 @@ import os
 import random
 import re
 import pprint
+import queue
 from weather import Weather
 from fuzzywuzzy import fuzz
 
@@ -25,6 +26,7 @@ class Commands(BaseCommands):
         self.backlog = BaseCommands.read_json("../data/backlog.json")
         self.work_tells = BaseCommands.read_json("../data/wtells.json")
         self.reminds = BaseCommands.read_json("../data/reminds.json")
+        self.grabbed = []
         if self.reminds is None:
             self.reminds = {}
         self.gkey = g_token
@@ -135,30 +137,51 @@ class Commands(BaseCommands):
         grab_source =  "<@"+grab.author.id +">"
         if grab_source not in self.grabs.keys():
             self.grabs[grab_source] = []
-        self.grabs[grab_source].append(grab.content)
+        urls = ""
+        if len(grab.attachments) > 0:
+            for att in grab.attachments:
+                urls = urls + " " + att["url"]
+        if len(grab.embeds) > 0:
+            for emb in grab.embeds:
+                if emb["url"] not in urls and emb["url"] not in grab.content:
+                    urls = urls+" " + emb["url"]
+        self.grabs[grab_source].append(grab.content + ' ' + urls)
         self.export_grabs()
     def import_grabs(self):
         self.grabs = BaseCommands.read_json("../data/grabs.json")
     def export_grabs(self):
         BaseCommands.export_json("../data/grabs.json",self.grabs)
     def get_grab_topic(self,thing):
-        grabs= [ [{item:x} for x in self.grabs[item] if thing in x ] for item in self.grabs.keys()]
-        grabs = [item for sublist in grabs for item in sublist]
-        (graba,grab), = random.choice(grabs).items()
-        return graba+": "+grab
-    def get_grab(self,author):
-        if author == "":
-            grabs = [ [{item:x} for x in self.grabs[item]] for item in self.grabs.keys()]
+        try:
+            grabs= [ [{item:x} for x in self.grabs[item] if thing in x ] for item in self.grabs.keys()]
             grabs = [item for sublist in grabs for item in sublist]
-            (graba,grab),=random.choice(grabs).items()
+            (graba,grab), = random.choice(grabs).items()
             return graba+": "+grab
-        else:
-            grabs = self.grabs[author]
-            return author+": "+random.choice(self.grabs[author])
+        except IndexError:
+            return "No grab found"
+    def get_grab(self,author):
+        try:
+            if author == "":
+                grabs = [ [{item:x} for x in self.grabs[item]] for item in self.grabs.keys()]
+                grabs = [item for sublist in grabs for item in sublist]
+                (graba,grab),=random.choice(grabs).items()
+                while grab in self.grabbed:
+                    (graba,grab),=random.choice(grabs).items()
+                    if(len(self.grabbed)>=5):
+                        del(self.grabbed[0])
+                self.grabbed.append(grab)
+                return graba+": "+grab
+            else:
+                grabs = self.grabs[author]
+                return author+": "+random.choice(self.grabs[author])
+        except KeyError:
+            return self.get_grab_topic(author)
     def ask(self,args):
         try:
             options = args.split(" or ",20)
         except:
+            if re.search(r'burrito',args) is not None:
+                return 'yes'
             options = ['yes','no']
         if len(options) == 1:
             options = ['yes','no']
