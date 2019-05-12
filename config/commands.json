@@ -22,5 +22,6 @@
 			"roll"		:"roll <number>d<faces>[D<number-to-drop><h(highest),l(lowest)][< >(greater than),<(lower than)><limit>][+<positive-modifier>][x<number-of-sets-of-dice-to-roll>]\n[] indicate optional parameters",
 			"remind"	:"\nremind <string> - adds <string> to list of things to remind\nremind - displays things to remind",
 			"commands"	:"commands - PM's the user a list of commands",
-            "help"		:"help <command> - returns usage of command"
+            "help"		:"help <command> - returns usage of command",
+			"yoink"		: "see grab"
 }

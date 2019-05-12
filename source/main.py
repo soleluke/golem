@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.6
 import asyncio
 import config
 import commands
@@ -6,6 +6,7 @@ import discord
 import pprint
 import triggers
 import re
+import sys
 
 config = config.Config()
 print("Loaded config\n")
@@ -34,9 +35,10 @@ async def on_message(message):
                 tmp = await client.send_message(message.channel,tell)
             if (re.search("^"+config.get_prefix()+"\w+",message.content)):
                 command = get_command(message.content)
-                if command == "grab":
+                grabber = message.author.id
+                if command == "grab" or command == "yoink":
                     async for log in client.logs_from(message.channel,limit=2):
-                        if not re.search(config.get_prefix()+"grab",log.content):
+                        if not re.search(config.get_prefix()+"grab",log.content) and grabber != log.author.id:
                             commands.add_grab(log)
                             tmp = await client.send_message(message.channel,"Grab Successful")
                 elif command == "list" and config.check_command(command):
@@ -60,4 +62,7 @@ async def check_triggers(message):
         tmp = await client.send_message(message.channel,response) 
     return
 print(config.get_token())
-client.run(config.get_token())
+try:
+    client.run(config.get_token())
+except:
+    print("Unexpected error:",sys.exc_info()[0])
