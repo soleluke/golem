@@ -11,6 +11,8 @@ import (
 	"sort"
 )
 
+func Initialize(){
+}
 func init(){
 	rand.Seed(time.Now().Unix())
 }
@@ -38,6 +40,21 @@ func MessageCreate(s *discordgo.Session,m *discordgo.MessageCreate){
 func getChoice(input string) string{
 	choices := strings.Split(input," or ")
 	return choices[rand.Intn(len(choices))]	
+}
+func rollDie(faces int,lim int,gt bool, mod int) int {
+	die := 0
+	for done:=true; done; done=withinLimit(die,lim,gt) {
+		die = rand.Intn(faces) + 1
+	}
+	die = die + mod
+	return die
+}
+func withinLimit(die int,lim int, gt bool) bool{
+	if gt {
+		return die <= lim
+	} else {
+		return die >= lim
+	}
 }
 func roll(input string) string{
 	r:= regexp.MustCompile(`\b(?P<number>[0-9]+)d(?P<faces>[0-9]+)(?P<drop>D[0-9]+[h,l])?(?P<lim>[<,>][0-9]+)?(?P<mod>[\+,\-][0-9]+)?(?P<times>x[0-9]+)?`)
@@ -105,16 +122,7 @@ func roll(input string) string{
 		dice := make([]int,number)
 		dstring:=""
 		for i,_:=range dice {
-			dice[i] = rand.Intn(faces)
-			if gt {
-				for ok:=dice[i]<=lim; ok; ok=dice[i]<=lim{
-					dice[i] = rand.Intn(faces)
-				}
-			} else {
-				for ok:=dice[i]>=lim; ok; ok=dice[i]>=lim {
-					dice[i] = rand.Intn(faces)
-				}
-			}
+			dice[i] = rollDie(faces,lim,gt,mod)
 		}
 		if drop > 0 {
 			sort.Ints(dice)

@@ -13,6 +13,7 @@ import (
 )
 
 var grabs map[string][]string
+var recents []string
 func importGrabs() {
 	jsonFile,err := os.Open(config.Cfg.DataDir+"/grabs.json")
 	if err != nil {
@@ -25,8 +26,10 @@ func importGrabs() {
 	json.Unmarshal([]byte(byteValue),&grabs)
 }
 func init(){
-	importGrabs()
 	rand.Seed(time.Now().Unix())
+}
+func Initialize(){
+	importGrabs()
 }
 
 
@@ -35,7 +38,7 @@ func MessageCreate(s *discordgo.Session,m *discordgo.MessageCreate){
 	if !isComm {
 		return
 	}
-	if comm=="grabr" {
+	if comm=="grabr" || comm == "morn"  {
 		ra := regexp.MustCompile(`^<@[0-9]{18}>$`)
 		if ra.MatchString(param) {
 			s.ChannelMessageSend(m.ChannelID,displayGrab(param,grabs[param][rand.Intn(len(grabs[param]))]))
@@ -46,7 +49,7 @@ func MessageCreate(s *discordgo.Session,m *discordgo.MessageCreate){
 					arr = append(arr,displayGrab(k,g))
 				}
 			}
-			s.ChannelMessageSend(m.ChannelID,arr[rand.Intn(len(arr))])
+			s.ChannelMessageSend(m.ChannelID,getNonRecentGrab(arr))
 		} else {
 			arr := []string{}
 			for k,v:=range grabs {
@@ -56,7 +59,7 @@ func MessageCreate(s *discordgo.Session,m *discordgo.MessageCreate){
 					}
 				}
 			}
-			s.ChannelMessageSend(m.ChannelID,arr[rand.Intn(len(arr))])
+			s.ChannelMessageSend(m.ChannelID,getNonRecentGrab(arr))
 		}
 		return
 	}
@@ -84,8 +87,49 @@ func MessageCreate(s *discordgo.Session,m *discordgo.MessageCreate){
 func displayGrab(a string, g string) string{
 	return a+" : " + g
 }
+func getNonRecentGrab(arr []string) string{
+	var grab string
+	isrec:=true
+	for grab="";isrec;isrec=false {
+		grab = arr[rand.Intn(len(arr))]
+		isrec=isRecent(grab)
+	}
+	recents = append(recents,grab)
+	if len(recents) > 5 {
+		recents = recents[1:]
+	}
+	return grab
+}
+func isRecent(s string) bool {
+	for _,item :=range(recents){
+		if item == s { return true }
+	}
+	return false
+}
+func isMorn(comm string,s *discordgo.Session,chid string) bool {
+	var tim,_=time.Parse("23:00","12:00")
+	if time.Now().Before(tim) {
+		return comm == "morn"
+	}
+	if comm == "morn" {
+		s.ChannelMessageSend(chid,"too late, try .aft")
+	}
+	return false
+}
+
+func isAft(comm string,s *discordgo.Session,chid string) bool {
+	var tim,_=time.Parse("23:00","12:00")
+	if time.Now().After(tim) {
+		return comm == "aft"
+	}
+	if comm == "aft" {
+		s.ChannelMessageSend(chid,"too early, try .morn")
+	}
+	return false
+}
+
 func exportGrabs(){
-	jsonString,err:=json.Marshal(grabs)
+	jsonString,err:=json.MarshalIndent(grabs,"","    ")
 	if err != nil {
 		fmt.Println(err)
 	}

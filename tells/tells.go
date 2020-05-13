@@ -22,7 +22,7 @@ func importTells() {
 	byteValue, _ := ioutil.ReadAll(jsonFile)
 	json.Unmarshal([]byte(byteValue),&tells)
 }
-func init(){
+func Initialize(){
 	importTells()
 }
 

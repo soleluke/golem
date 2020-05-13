@@ -19,7 +19,7 @@ func importReminds(){
 	byteValue,_:=ioutil.ReadAll(jsonFile)
 	json.Unmarshal([]byte(byteValue),&reminds)
 }
-func init(){
+func Initialize(){
 	importReminds()
 }
 

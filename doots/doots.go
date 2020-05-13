@@ -21,7 +21,7 @@ func importDoots() {
 	byteValue, _ := ioutil.ReadAll(jsonFile)
 	json.Unmarshal([]byte(byteValue),&doots)
 }
-func init(){
+func Initialize(){
 	importDoots()
 }
 

@@ -33,11 +33,12 @@ func importTriggers() {
 		}
 	}
 }
-func init(){
+func Initialize(){
 	importTriggers()
 }
 
 func MessageCreate(s *discordgo.Session,m *discordgo.MessageCreate){
+	if m.Author.ID == s.State.User.ID { return }
 	for i,val:=range triggerReg {
 		if val.MatchString(strings.ToLower(m.Content)) {
 			s.ChannelMessageSend(m.ChannelID,triggerRes[i])

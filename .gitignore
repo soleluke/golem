@@ -1,5 +1,8 @@
 source/__pycache__/*
 data/*
+*.json
 config/config.json
 config/triggers.json
 todo
+golem
+golem_*

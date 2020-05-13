@@ -7,7 +7,6 @@ import (
 	"github.com/bwmarrin/discordgo"
 	"golem/config"
 	"math/rand"
-	"time"
 	"strings"
 )
 
@@ -25,7 +24,9 @@ func importPlaces() {
 }
 func init(){
 	importPlaces()
-	rand.Seed(time.Now().Unix())
+}
+func Initialize() {
+	importPlaces()
 }
 
 func MessageCreate(s *discordgo.Session,m *discordgo.MessageCreate){

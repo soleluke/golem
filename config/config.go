@@ -13,10 +13,12 @@ type Config struct {
 	ConnectionString string `json:"connection_string"`
 	DataDir string `json:"data_dir"`
 	ConfigDir string `json:"config_dir"`
+	AllowHistoryImport bool `json:"import_history"`
+	MarkovOrder int `json:"markov_order"`
 }
 var Cfg Config
-func init() {
-	jsonFile, err := os.Open("/usr/local/etc/golem/config.json")
+func Initialize(configFile string) {
+	jsonFile, err := os.Open(configFile)
 	if err != nil {
 		fmt.Println("error opening config file ", err)
 		return
