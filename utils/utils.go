@@ -46,7 +46,6 @@ func rollDie(faces int,lim int,gt bool, mod int) int {
 	for done:=true; done; done=withinLimit(die,lim,gt) {
 		die = rand.Intn(faces) + 1
 	}
-	die = die + mod
 	return die
 }
 func withinLimit(die int,lim int, gt bool) bool{
